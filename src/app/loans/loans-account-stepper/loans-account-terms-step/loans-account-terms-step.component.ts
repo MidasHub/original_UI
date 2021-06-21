@@ -103,8 +103,8 @@ export class LoansAccountTermsStepComponent implements OnInit, OnChanges {
       'numberOfRepayments': ['', Validators.required],
       'repaymentEvery': ['', Validators.required],
       'repaymentFrequencyType': ['', Validators.required],
-      'repaymentFrequencyNthDayType': ['', Validators.required],
-      'repaymentFrequencyDayOfWeekType': ['', Validators.required],
+      'repaymentFrequencyNthDayType': [''],
+      'repaymentFrequencyDayOfWeekType': [''],
       'repaymentsStartingFromDate': [''],
       'interestChargedFromDate': [''],
       'interestRatePerPeriod': [''],
@@ -147,6 +147,9 @@ export class LoansAccountTermsStepComponent implements OnInit, OnChanges {
    * Returns loans account terms form value.
    */
   get loansAccountTerms() {
+    if (this.loansAccountTermsForm.value.recalculationCompoundingFrequencyDate == '') {
+      this.loansAccountTermsForm.removeControl('recalculationCompoundingFrequencyDate');
+    }
     return this.loansAccountTermsForm.value;
   }
 
