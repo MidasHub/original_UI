@@ -140,7 +140,7 @@ export class AuthenticationService {
    * @param {number} expiresInTime OAuth2 token expiry time in seconds.
    */
   private refreshTokenOnExpiry(expiresInTime: number) {
-    setTimeout(() => this.refreshOAuthAccessToken(), expiresInTime * 1000);
+    setTimeout(() => this.refreshOAuthAccessToken(), (expiresInTime - 10) * 1000);
   }
 
   /**
