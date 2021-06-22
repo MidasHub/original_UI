@@ -1,6 +1,6 @@
 /** Angular Imports */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 
 /** rxjs Imports */
 import { Observable, of } from 'rxjs';
@@ -89,14 +89,17 @@ export class AuthenticationService {
     this.storage = this.rememberMe ? localStorage : sessionStorage;
 
     if (environment.oauth.enabled) {
-      let httpParams = new HttpParams();
-      httpParams = httpParams.set('client_id', 'community-app');
-      httpParams = httpParams.set('grant_type', 'password');
-      httpParams = httpParams.set('client_secret', '123');
-      httpParams = httpParams.set("username", loginContext.username);
-      httpParams = httpParams.set("password", loginContext.password);
+      const body = new URLSearchParams();
+      body.append('client_id', environment.oauth.clientID);
+      body.append('grant_type', 'password');
+      body.append('client_secret', environment.oauth.clientSecrect);
+      body.append('username', loginContext.username);
+      body.append('password', loginContext.password);
 
-      return this.http.disableApiPrefix().post(`${environment.oauth.serverUrl}/oauth/token`, {}, { params: httpParams })
+      let httpHeader = new HttpHeaders();
+      httpHeader = httpHeader.set('Content-Type', 'application/x-www-form-urlencoded');
+      // return this.http.disableApiPrefix().post(`${environment.oauth.serverUrl}/oauth/token`, {}, { params: httpParams })
+      return this.http.disableApiPrefix().post(`${environment.oauth.serverUrl}/oauth/token`, body.toString(), { headers: httpHeader})
         .pipe(
           map((tokenResponse: OAuth2Token) => {
             this.getUserDetails(tokenResponse);
@@ -146,12 +149,21 @@ export class AuthenticationService {
   private refreshOAuthAccessToken() {
     const oAuthRefreshToken = JSON.parse(this.storage.getItem(this.oAuthTokenDetailsStorageKey)).refresh_token;
     this.authenticationInterceptor.removeAuthorization();
-    let httpParams = new HttpParams();
-    httpParams = httpParams.set('client_id', 'community-app');
-    httpParams = httpParams.set('grant_type', 'refresh_token');
-    httpParams = httpParams.set('client_secret', '123');
-    httpParams = httpParams.set('refresh_token', oAuthRefreshToken);
-    this.http.disableApiPrefix().post(`${environment.oauth.serverUrl}/oauth/token`, {}, { params: httpParams })
+    // let httpParams = new HttpParams();
+    // httpParams = httpParams.set('client_id', 'community-app');
+    // httpParams = httpParams.set('grant_type', 'refresh_token');
+    // httpParams = httpParams.set('client_secret', '123');
+    // httpParams = httpParams.set('refresh_token', oAuthRefreshToken);
+    const body = new URLSearchParams();
+    body.append('client_id', environment.oauth.clientID);
+    body.append('grant_type', 'refresh_token');
+    body.append('client_secret', environment.oauth.clientSecrect);
+    body.append('refresh_token', oAuthRefreshToken);
+
+    let httpHeader = new HttpHeaders();
+    httpHeader = httpHeader.set('Content-Type', 'application/x-www-form-urlencoded');
+    // this.http.disableApiPrefix().post(`${environment.oauth.serverUrl}/oauth/token`, {}, { params: httpParams })
+    this.http.disableApiPrefix().post(`${environment.oauth.serverUrl}/oauth/token`, body.toString(), { headers: httpHeader })
       .subscribe((tokenResponse: OAuth2Token) => {
         this.storage.setItem(this.oAuthTokenDetailsStorageKey, JSON.stringify(tokenResponse));
         this.authenticationInterceptor.setAuthorizationToken(tokenResponse.access_token);
