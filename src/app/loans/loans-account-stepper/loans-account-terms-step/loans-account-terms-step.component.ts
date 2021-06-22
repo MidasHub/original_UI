@@ -134,7 +134,7 @@ export class LoansAccountTermsStepComponent implements OnInit, OnChanges {
    */
   setOptions() {
     this.termFrequencyTypeData = this.loansAccountProductTemplate.termFrequencyTypeOptions;
-    this.repaymentFrequencyNthDayTypeData = this.loansAccountProductTemplate.repaymentFrequencyNthDayTypeOptions;
+    this.repaymentFrequencyNthDayTypeData = [...this.loansAccountProductTemplate.repaymentFrequencyNthDayTypeOptions,{ id: '', code: '', value: 'same as payment date'}];
     this.repaymentFrequencyDaysOfWeekTypeData = this.loansAccountProductTemplate.repaymentFrequencyDaysOfWeekTypeOptions;
     this.interestTypeData = this.loansAccountProductTemplate.interestTypeOptions;
     this.amortizationTypeData = this.loansAccountProductTemplate.amortizationTypeOptions;
@@ -147,7 +147,7 @@ export class LoansAccountTermsStepComponent implements OnInit, OnChanges {
    * Returns loans account terms form value.
    */
   get loansAccountTerms() {
-    if (this.loansAccountTermsForm.value.recalculationCompoundingFrequencyDate == '') {
+    if (this.loansAccountTermsForm.value.recalculationCompoundingFrequencyDate === '') {
       this.loansAccountTermsForm.removeControl('recalculationCompoundingFrequencyDate');
     }
     return this.loansAccountTermsForm.value;

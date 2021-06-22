@@ -71,8 +71,8 @@
       </mat-form-field>
 
       <mat-form-field fxFlex="48%" *ngIf="loansAccountTermsForm.controls.repaymentFrequencyType.value == 2">
-        <mat-label>Select On</mat-label>
-        <mat-select formControlName="repaymentFrequencyNthDayType" required>
+        <mat-label>Select Week on month</mat-label>
+        <mat-select formControlName="repaymentFrequencyNthDayType" >
           <mat-option
             *ngFor="let repaymentFrequencyNthDayType of repaymentFrequencyNthDayTypeData"
             [value]="repaymentFrequencyNthDayType.id">
@@ -81,9 +81,9 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field fxFlex="48%" *ngIf="loansAccountTermsForm.controls.repaymentFrequencyType.value == 2">
-        <mat-label>Select Day</mat-label>
-        <mat-select formControlName="repaymentFrequencyDayOfWeekType" required>
+      <mat-form-field fxFlex="48%" *ngIf="loansAccountTermsForm.controls.repaymentFrequencyType.value == 2 && loansAccountTermsForm.value.repaymentFrequencyNthDayType != 0">
+        <mat-label>Select Day in week</mat-label>
+        <mat-select formControlName="repaymentFrequencyDayOfWeekType" >
           <mat-option
             *ngFor="let repaymentFrequencyDayOfWeekType of repaymentFrequencyDaysOfWeekTypeData"
             [value]="repaymentFrequencyDayOfWeekType.id">
